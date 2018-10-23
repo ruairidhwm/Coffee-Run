@@ -6,9 +6,9 @@ import Options from './Options';
 import OptionModal from './OptionModal';
 
 export default class CoffeeRunApp extends React.Component {
-  state  = {
+  state = {
     options: [],
-    selectedOption: undefined
+    selectedOption: undefined,
   };
 
   componentDidMount() {
@@ -22,31 +22,31 @@ export default class CoffeeRunApp extends React.Component {
     } catch (e) {
       // Do nothing at all
     }
-  };
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.options.length !== this.state.options.length) {
       const json = JSON.stringify(this.state.options);
       localStorage.setItem('options', json);
     }
-  };
+  }
 
   componentWillUnmount() {
     console.log('componentWillUnmount');
-  };
+  }
 
   handleDeleteOptions = () => {
     this.setState(() => ({ options: [] }));
   };
 
-  handleDeleteOption = (optionToRemove) => {
-    this.setState((prevState) => ({
-      options: prevState.options.filter((option) => optionToRemove !== option)
+  handleDeleteOption = optionToRemove => {
+    this.setState(prevState => ({
+      options: prevState.options.filter(option => optionToRemove !== option),
     }));
   };
 
   handleModalClose = () => {
-    this.setState( () => ({ selectedOption: undefined }));
+    this.setState(() => ({ selectedOption: undefined }));
   };
 
   handlePick = () => {
@@ -54,19 +54,19 @@ export default class CoffeeRunApp extends React.Component {
     const option = this.state.options[randomNum];
 
     this.setState(() => ({
-      selectedOption: option
+      selectedOption: option,
     }));
   };
 
-  handleAddOption = (option) => {
+  handleAddOption = option => {
     if (!option) {
       return 'Enter valid value to add person';
     } else if (this.state.options.indexOf(option) > -1) {
       return 'This person already exists';
     }
 
-    this.setState((prevState) => ({
-      options: prevState.options.concat(option)
+    this.setState(prevState => ({
+      options: prevState.options.concat(option),
     }));
   };
 
@@ -74,29 +74,24 @@ export default class CoffeeRunApp extends React.Component {
     const subtitle = 'Randomly select who will get the next round of coffee';
 
     return (
-            <div>
-            <Header subtitle={subtitle} />
-            <div className="container">
-            <Action
-            hasOptions={this.state.options.length > 0}
-            handlePick={this.handlePick}
-            />
-            <div className="widget">
+      <div>
+        <Header subtitle={subtitle} />
+        <div className="container">
+          <Action hasOptions={this.state.options.length > 0} handlePick={this.handlePick} />
+          <div className="widget">
             <Options
-            options={this.state.options}
-            handleDeleteOptions={this.handleDeleteOptions}
-            handleDeleteOption={this.handleDeleteOption}
+              options={this.state.options}
+              handleDeleteOptions={this.handleDeleteOptions}
+              handleDeleteOption={this.handleDeleteOption}
             />
-            <AddOption
-            handleAddOption={this.handleAddOption}
-            />
-            </div>
+            <AddOption handleAddOption={this.handleAddOption} />
+          </div>
         </div>
-            <OptionModal
-             selectedOption={this.state.selectedOption} 
-             handleModalClose={this.handleModalClose}
-            />
-            </div>
-            );
+        <OptionModal
+          selectedOption={this.state.selectedOption}
+          handleModalClose={this.handleModalClose}
+        />
+      </div>
+    );
   }
 }
